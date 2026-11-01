@@ -264,7 +264,7 @@ class SubscriptionsController
         Activity::createActivity([
             'user_uuid' => $admin['uuid'] ?? null,
             'name' => 'billingplans_admin_update_subscription',
-            'context' => "Admin updated subscription #$subscriptionId (user: {$subscription['user_id']}, plan: {$subscription['plan_name']})" . ($serverUuid ? " — server $serverUuid state synced" : ''),
+            'context' => "Admin updated subscription #$subscriptionId (user: {$subscription['user_id']}, plan: {$subscription['plan_name']})" . ($serverUuid ? " - server $serverUuid state synced" : ''),
             'ip_address' => CloudFlareRealIP::getRealIP(),
         ]);
 
@@ -325,8 +325,8 @@ class SubscriptionsController
             'name' => 'billingplans_admin_cancel_subscription',
             'context' => "Admin cancelled subscription #$subscriptionId (user: {$subscription['user_id']}, plan: {$subscription['plan_name']})" .
                 ($atPeriodEnd
-                    ? " — active until {$subscription['next_renewal_at']}"
-                    : ($serverUuid ? " — server $serverUuid suspended immediately" : '')),
+                    ? " - active until {$subscription['next_renewal_at']}"
+                    : ($serverUuid ? " - server $serverUuid suspended immediately" : '')),
             'ip_address' => CloudFlareRealIP::getRealIP(),
         ]);
 

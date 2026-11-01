@@ -250,7 +250,7 @@ function getPeriodLabel(days: number) {
   return PRESET_PERIODS.find((p) => p.days === days)?.label ?? `${days}d`;
 }
 function formatDate(dt: string | null) {
-  if (!dt) return "—";
+  if (!dt) return "-";
   return new Date(dt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
@@ -410,7 +410,7 @@ const couponDiscountLabel = (coupon: PlanCoupon) => {
   const parts: string[] = [];
   if (Number(coupon.discount_percent ?? 0) > 0) parts.push(`${coupon.discount_percent}%`);
   if (Number(coupon.discount_credits ?? 0) > 0) parts.push(`${Number(coupon.discount_credits).toLocaleString()} cr`);
-  return parts.join(" + ") || "—";
+  return parts.join(" + ") || "-";
 };
 
 const openCatModal = (cat?: Category) => {
@@ -653,7 +653,7 @@ const totalSubscriptions = computed(() => {
   if (!stats.value) return 0;
   return Object.values(stats.value.subscriptions).reduce((a, b) => a + b, 0);
 });
-const editorTitle = computed(() => editingPlan.value ? `Edit — ${editingPlan.value.name}` : "New Plan");
+const editorTitle = computed(() => editingPlan.value ? `Edit - ${editingPlan.value.name}` : "New Plan");
 
 onMounted(() => Promise.all([loadPlans(), loadSubscriptions(), loadStats(), loadSettings(), loadOptions(), loadCategories(), loadCoupons()]));
 
@@ -738,7 +738,7 @@ watch(
         <p class="text-sm text-muted-foreground">
           Add credits to <strong class="text-foreground">{{ subToRefund?.username ?? "User #" + subToRefund?.user_id }}</strong>
           for subscription <strong class="text-foreground">#{{ subToRefund?.id }}</strong>.
-          Default is this plan's price ({{ subToRefund?.price_credits?.toLocaleString() ?? "—" }} cr).
+          Default is this plan's price ({{ subToRefund?.price_credits?.toLocaleString() ?? "-" }} cr).
         </p>
         <div>
           <label class="block text-xs font-medium text-muted-foreground mb-1.5">Credits to add</label>
@@ -840,7 +840,7 @@ watch(
       <div class="bg-card border border-border rounded-xl shadow-sm p-6">
         <p class="text-sm text-muted-foreground mb-5">
           Delete <strong class="text-foreground">{{ catToDelete?.name }}</strong>?
-          Plans in this category will become uncategorised — they won't be deleted.
+          Plans in this category will become uncategorised - they won't be deleted.
         </p>
         <div class="flex gap-3 justify-end">
           <button @click="showDeleteCatConfirm = false" class="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-accent transition-colors">Cancel</button>
@@ -877,7 +877,7 @@ watch(
           <ArrowLeft class="h-4 w-4" />Back to Coupons
         </button>
         <span class="text-muted-foreground/40">/</span>
-        <h1 class="text-base font-semibold text-foreground">{{ editingCoupon ? `Edit — ${editingCoupon.code}` : "New Coupon" }}</h1>
+        <h1 class="text-base font-semibold text-foreground">{{ editingCoupon ? `Edit - ${editingCoupon.code}` : "New Coupon" }}</h1>
       </div>
 
       <form @submit.prevent="saveCoupon" class="bg-card border border-border rounded-xl shadow-sm p-6 space-y-5">
@@ -978,7 +978,7 @@ watch(
               <div class="billing-select-wrap">
                 <select v-model.number="planForm.category_id"
                   class="billing-select">
-                  <option :value="null">— No category —</option>
+                  <option :value="null">- No category -</option>
                   <option v-for="c in planOptions.categories" :key="c.id" :value="c.id">
                     {{ c.icon ? c.icon + ' ' : '' }}{{ c.name }}
                   </option>
@@ -986,7 +986,7 @@ watch(
                 <ChevronDown class="billing-select-icon" />
               </div>
               <p v-if="!planOptions.categories.length" class="text-xs text-muted-foreground mt-1">
-                No categories yet — <button type="button" @click="activeTab = 'categories'" class="text-primary hover:underline">create one first</button>.
+                No categories yet - <button type="button" @click="activeTab = 'categories'" class="text-primary hover:underline">create one first</button>.
               </p>
             </div>
 
@@ -1051,7 +1051,7 @@ watch(
 
             <div class="md:col-span-2">
               <label class="block text-sm font-medium mb-1.5">Full Description <span class="text-muted-foreground font-normal">(shown on detail page)</span></label>
-              <textarea v-model="planForm.long_description" rows="4" placeholder="Detailed description of what's included — features, limits, notes..."
+              <textarea v-model="planForm.long_description" rows="4" placeholder="Detailed description of what's included - features, limits, notes..."
                 class="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
             </div>
             <div class="md:col-span-2">
@@ -1191,14 +1191,14 @@ watch(
             <div>
               <label class="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">VM Node</label>
               <select v-model.number="vdsConfig().vm_node_id" class="billing-select">
-                <option :value="undefined">— Select VM node —</option>
+                <option :value="undefined">- Select VM node -</option>
                 <option v-for="n in planOptions.vm_nodes" :key="n.id" :value="n.id">{{ n.name }}</option>
               </select>
             </div>
             <div>
               <label class="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">VM Template</label>
               <select v-model.number="vdsConfig().template_id" class="billing-select">
-                <option :value="undefined">— Select template —</option>
+                <option :value="undefined">- Select template -</option>
                 <option v-for="t in planOptions.vm_templates" :key="t.id" :value="t.id">{{ t.name }} ({{ t.guest_type }})</option>
               </select>
             </div>
@@ -1243,7 +1243,7 @@ watch(
                 <div class="billing-select-wrap">
                   <select v-model.number="planForm.realms_id" @change="onRealmChange"
                     class="billing-select">
-                    <option :value="null">— None —</option>
+                    <option :value="null">- None -</option>
                     <option v-for="r in planOptions.realms" :key="r.id" :value="r.id">{{ r.name }}</option>
                   </select>
                   <ChevronDown class="billing-select-icon" />
@@ -1254,7 +1254,7 @@ watch(
                 <div class="billing-select-wrap">
                   <select v-model.number="planForm.spell_id" @change="onSpellChange" :disabled="!planForm.realms_id"
                     class="billing-select">
-                    <option :value="null">— Select egg —</option>
+                    <option :value="null">- Select egg -</option>
                     <option v-for="s in filteredSpells" :key="s.id" :value="s.id">{{ s.name }}</option>
                   </select>
                   <ChevronDown class="billing-select-icon" />
@@ -1328,7 +1328,7 @@ watch(
                 </div>
                 <template v-if="planForm.user_can_choose_realm">
                   <div>
-                    <p class="text-xs font-semibold text-muted-foreground mb-2">Whitelist — allowed realms <span class="font-normal">(empty = all realms)</span></p>
+                    <p class="text-xs font-semibold text-muted-foreground mb-2">Whitelist - allowed realms <span class="font-normal">(empty = all realms)</span></p>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-40 overflow-y-auto pr-1">
                       <label v-for="r in planOptions.realms" :key="r.id"
                         class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md cursor-pointer transition-colors"
@@ -1368,7 +1368,7 @@ watch(
                 </div>
                 <template v-if="planForm.user_can_choose_spell">
                   <div>
-                    <p class="text-xs font-semibold text-muted-foreground mb-2">Whitelist — allowed eggs <span class="font-normal">(empty = all eggs{{ planForm.realms_id ? ' in selected realm' : '' }})</span></p>
+                    <p class="text-xs font-semibold text-muted-foreground mb-2">Whitelist - allowed eggs <span class="font-normal">(empty = all eggs{{ planForm.realms_id ? ' in selected realm' : '' }})</span></p>
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 max-h-40 overflow-y-auto pr-1">
                       <label v-for="s in allowedSpellsPool" :key="s.id"
                         class="flex items-center gap-2 text-xs px-2 py-1.5 rounded-md cursor-pointer transition-colors"
@@ -1901,7 +1901,7 @@ watch(
                     <span v-else-if="plan.category.icon">{{ plan.category.icon }}</span>
                     {{ plan.category.name }}
                   </span>
-                  <span v-else class="text-xs text-muted-foreground/40">—</span>
+                  <span v-else class="text-xs text-muted-foreground/40">-</span>
                 </td>
                 <td class="px-4 py-3">
                   <span class="font-semibold">{{ plan.price_credits.toLocaleString() }}</span>
@@ -1931,7 +1931,7 @@ watch(
                     <span v-if="plan.user_can_choose_realm" class="inline-flex items-center gap-1 text-xs bg-violet-500/10 text-violet-400 border border-violet-500/20 px-2 py-0.5 rounded-full w-fit">
                       User picks realm
                     </span>
-                    <span v-if="!plan.spell_id && !plan.user_can_choose_spell && !plan.user_can_choose_realm" class="text-xs text-muted-foreground/40">—</span>
+                    <span v-if="!plan.spell_id && !plan.user_can_choose_spell && !plan.user_can_choose_realm" class="text-xs text-muted-foreground/40">-</span>
                   </div>
                 </td>
                 <td class="px-4 py-3">
@@ -2122,7 +2122,7 @@ watch(
                       Go to server
                     </button>
                   </template>
-                  <span v-else class="text-muted-foreground/40 text-xs">—</span>
+                  <span v-else class="text-muted-foreground/40 text-xs">-</span>
                 </td>
                 <td class="px-4 py-3 text-muted-foreground text-xs hidden xl:table-cell">{{ formatDate(sub.created_at) }}</td>
                 <td class="px-4 py-3 text-right">

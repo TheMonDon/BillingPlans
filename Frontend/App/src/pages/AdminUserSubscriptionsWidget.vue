@@ -34,7 +34,7 @@ const subscriptions = ref<Subscription[]>([]);
 const username = ref<string>("");
 
 const formatDate = (v: string | null) => {
-  if (!v) return "—";
+  if (!v) return "-";
   return new Date(v).toLocaleDateString(undefined, {
     year: "numeric",
     month: "short",
@@ -45,7 +45,7 @@ const formatDate = (v: string | null) => {
 };
 
 const periodLabel = (days: number | null) => {
-  if (!days) return "—";
+  if (!days) return "-";
   if (days === 30 || days === 31) return "Monthly";
   if (days === 90) return "Quarterly";
   if (days === 180) return "Semi-annual";

@@ -71,7 +71,7 @@ class Subscription
     }
 
     /**
-     * Aggregate admin refund counters (requires admin_credits_refunded_total column — returns zeros if missing).
+     * Aggregate admin refund counters (requires admin_credits_refunded_total column - returns zeros if missing).
      *
      * @return array{total_credits_refunded: int, subscriptions_with_refunds: int}
      */
@@ -288,7 +288,7 @@ class Subscription
 
     /**
      * Get cancelled subscriptions whose next_renewal_at has passed and still have a server_uuid.
-     * These are subscriptions the user cancelled — server was kept running until expiry.
+     * These are subscriptions the user cancelled - server was kept running until expiry.
      */
     public static function getDueCancellation(): array
     {

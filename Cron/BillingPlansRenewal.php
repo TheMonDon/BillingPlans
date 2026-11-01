@@ -25,6 +25,7 @@ use App\Chat\Server;
 use App\Cron\TimeTask;
 use App\Chat\TimedTask;
 use App\Chat\Allocation;
+use App\Helpers\WingsUrlHelper;
 use App\Services\Wings\Wings;
 use App\Config\ConfigInterface;
 use App\Addons\billingplans\Chat\Plan;
@@ -112,7 +113,7 @@ class BillingPlansRenewal implements TimeTask
         $stats['total'] = count($dueSubscriptions);
 
         if ($stats['total'] === 0) {
-            MinecraftColorCodeSupport::sendOutputWithNewLine('&8[Renewals] &7No subscriptions due — nothing to do.');
+            MinecraftColorCodeSupport::sendOutputWithNewLine('&8[Renewals] &7No subscriptions due - nothing to do.');
 
             return $stats;
         }
@@ -174,7 +175,7 @@ class BillingPlansRenewal implements TimeTask
                 if (time() < $graceEnd) {
                     $remaining = (int) ceil(($graceEnd - time()) / 86400);
                     MinecraftColorCodeSupport::sendOutputWithNewLine(
-                        "&e  [#$subId] ⏳ Grace period active — {$remaining}d remaining (short {$shortage} cr)"
+                        "&e  [#$subId] ⏳ Grace period active - {$remaining}d remaining (short {$shortage} cr)"
                     );
 
                     return 'grace';
@@ -182,14 +183,14 @@ class BillingPlansRenewal implements TimeTask
             } elseif ($gracePeriodDays > 0 && empty($subscription['grace_started_at'])) {
                 Subscription::update($subId, ['grace_started_at' => date('Y-m-d H:i:s')]);
                 MinecraftColorCodeSupport::sendOutputWithNewLine(
-                    "&e  [#$subId] ⏳ Insufficient credits (short {$shortage} cr) — grace period started ({$gracePeriodDays}d)"
+                    "&e  [#$subId] ⏳ Insufficient credits (short {$shortage} cr) - grace period started ({$gracePeriodDays}d)"
                 );
 
                 return 'grace';
             }
 
             MinecraftColorCodeSupport::sendOutputWithNewLine(
-                "&6  [#$subId] ⏸ Suspending — balance {$currentBalance} cr, need {$priceCredits} cr (short {$shortage} cr)"
+                "&6  [#$subId] ⏸ Suspending - balance {$currentBalance} cr, need {$priceCredits} cr (short {$shortage} cr)"
             );
 
             Subscription::update($subId, [
@@ -241,7 +242,7 @@ class BillingPlansRenewal implements TimeTask
 
         $newBalance = $currentBalance - $discountedCredits;
         MinecraftColorCodeSupport::sendOutputWithNewLine(
-            "&a  [#$subId] ✔ Renewed — deducted {$discountedCredits} cr (new balance: {$newBalance} cr) | next: $nextRenewal"
+            "&a  [#$subId] ✔ Renewed - deducted {$discountedCredits} cr (new balance: {$newBalance} cr) | next: $nextRenewal"
         );
         $app->getLogger()->info("BillingPlans: Subscription #$subId renewed (user #$userId, -{$discountedCredits} cr, next: $nextRenewal).");
 
@@ -254,7 +255,7 @@ class BillingPlansRenewal implements TimeTask
 
         $terminationDays = SettingsHelper::getTerminationDays();
         if ($terminationDays <= 0) {
-            MinecraftColorCodeSupport::sendOutputWithNewLine('&8[Terminations] &7Disabled (termination_days = 0 — servers stay suspended indefinitely).');
+            MinecraftColorCodeSupport::sendOutputWithNewLine('&8[Terminations] &7Disabled (termination_days = 0 - servers stay suspended indefinitely).');
 
             return $stats;
         }
@@ -293,7 +294,7 @@ class BillingPlansRenewal implements TimeTask
             if (time() < $terminateAfter) {
                 $daysLeft = (int) ceil(($terminateAfter - time()) / 86400);
                 MinecraftColorCodeSupport::sendOutputWithNewLine(
-                    "&8  [#$subId] &7Suspended {$daysElapsed}d ago — {$daysLeft}d until auto-termination"
+                    "&8  [#$subId] &7Suspended {$daysElapsed}d ago - {$daysLeft}d until auto-termination"
                 );
                 continue;
             }
@@ -305,7 +306,7 @@ class BillingPlansRenewal implements TimeTask
             ]);
 
             MinecraftColorCodeSupport::sendOutputWithNewLine(
-                "&c  [#$subId] ✘ Terminated — suspended {$daysElapsed}d (plan: $planName, user: #$userId)"
+                "&c  [#$subId] ✘ Terminated - suspended {$daysElapsed}d (plan: $planName, user: #$userId)"
             );
 
             if ($isVds) {
@@ -346,7 +347,7 @@ class BillingPlansRenewal implements TimeTask
         }
 
         MinecraftColorCodeSupport::sendOutputWithNewLine(
-            "&8[Cancellations] &f{$stats['checked']} &7cancelled subscription(s) past expiry — suspending servers..."
+            "&8[Cancellations] &f{$stats['checked']} &7cancelled subscription(s) past expiry - suspending servers..."
         );
         MinecraftColorCodeSupport::sendOutputWithNewLine('');
 
@@ -360,7 +361,7 @@ class BillingPlansRenewal implements TimeTask
             $priceCredits = (int) $chargeBreakdown['total_credits'];
 
             MinecraftColorCodeSupport::sendOutputWithNewLine(
-                "&8  [#$subId] &7Cancelled sub — billing period ended, entering suspension lifecycle for server $serverUuid"
+                "&8  [#$subId] &7Cancelled sub - billing period ended, entering suspension lifecycle for server $serverUuid"
             );
 
             Subscription::update($subId, [
@@ -406,7 +407,7 @@ class BillingPlansRenewal implements TimeTask
             $server = Server::getServerByUuid($uuid);
             if (!$server) {
                 $app->getLogger()->warning("BillingPlans: Server $uuid not found for deletion (subscription #$subId).");
-                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found — skipping deletion.");
+                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found - skipping deletion.");
 
                 return false;
             }
@@ -425,7 +426,14 @@ class BillingPlansRenewal implements TimeTask
             $node = Node::getNodeById((int) $server['node_id']);
             if ($node) {
                 try {
-                    $wings = new Wings($node['fqdn'], $node['daemonListen'], $node['scheme'], $node['daemon_token'], 30);
+                    $wings = new Wings(
+                        $node['fqdn'],
+                        $node['daemonListen'],
+                        $node['scheme'],
+                        $node['daemon_token'],
+                        30,
+                        WingsUrlHelper::isBehindProxy($node)
+                    );
                     $wings->getServer()->deleteServer($uuid);
                 } catch (\Exception $e) {
                     $app->getLogger()->error("BillingPlans: Wings deletion failed for $uuid: " . $e->getMessage());
@@ -455,7 +463,7 @@ class BillingPlansRenewal implements TimeTask
             $server = Server::getServerByUuid($uuid);
             if (!$server) {
                 $app->getLogger()->warning("BillingPlans: Server $uuid not found (subscription #$subId).");
-                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found — skipping suspension.");
+                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found - skipping suspension.");
 
                 return false;
             }
@@ -479,7 +487,7 @@ class BillingPlansRenewal implements TimeTask
             $server = Server::getServerByUuid($uuid);
             if (!$server) {
                 $app->getLogger()->warning("BillingPlans: Server $uuid not found (subscription #$subId).");
-                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found — skipping unsuspension.");
+                MinecraftColorCodeSupport::sendOutputWithNewLine("&e  [#$subId] ⚠ Server $uuid not found - skipping unsuspension.");
 
                 return;
             }

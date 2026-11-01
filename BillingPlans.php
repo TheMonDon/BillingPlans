@@ -30,7 +30,7 @@ class BillingPlans implements AppPlugin
     {
         // Sync billing-plan subscription status when the panel suspends/unsuspends the linked server
         // (see featherpanel:server:suspended / featherpanel:server:unsuspended).
-        // server_suspend_sync=1 means we suspended the sub because of a panel server suspend — only then do we
+        // server_suspend_sync=1 means we suspended the sub because of a panel server suspend - only then do we
         // auto-reactivate on server unsuspend (billing-driven suspensions stay until renewal).
 
         $event->on(ServerEvent::onServerSuspended(), function (array $server, $suspendedBy): void {
@@ -78,7 +78,7 @@ class BillingPlans implements AppPlugin
         });
 
         // When a server is removed from the panel, cancel any billing-plan subscription that owned it.
-        // Payload from emit() is array_values([ server, deleted_by, ... ]) — see PluginEvents::emit().
+        // Payload from emit() is array_values([ server, deleted_by, ... ]) - see PluginEvents::emit().
         $event->on(ServerEvent::onServerDeleted(), function (array $server, $deletedBy = null): void {
             $uuid = isset($server['uuid']) ? trim((string) $server['uuid']) : '';
             if ($uuid === '') {
@@ -136,7 +136,7 @@ class BillingPlans implements AppPlugin
                 Activity::createActivity([
                     'user_uuid' => is_array($deletedBy) ? ($deletedBy['uuid'] ?? null) : null,
                     'name' => 'billingplans_subscriptions_closed_server_deleted',
-                    'context' => "BillingPlans: server deleted ({$label}, uuid {$uuid}) — " . implode('; ', $parts) . '.',
+                    'context' => "BillingPlans: server deleted ({$label}, uuid {$uuid}) - " . implode('; ', $parts) . '.',
                     'ip_address' => CloudFlareRealIP::getRealIP(),
                 ]);
             }

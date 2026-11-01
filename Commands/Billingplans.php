@@ -110,7 +110,7 @@ class Billingplans extends App implements CommandBuilder
             return;
         }
 
-        $cli->send('&bBillingPlans &7— &foverview');
+        $cli->send('&bBillingPlans &7- &foverview');
         $cli->send('&7' . str_repeat('-', 56));
         $cli->send('&ePlans in database: &f' . count($plans));
         $cli->send('&eSubscriptions by status:');
@@ -265,7 +265,7 @@ class Billingplans extends App implements CommandBuilder
             }
             $v = $s[$key];
             if ($v === null || $v === '') {
-                $v = '&7—';
+                $v = '&7-';
             } else {
                 $v = '&f' . $v;
             }

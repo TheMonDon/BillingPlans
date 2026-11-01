@@ -72,7 +72,7 @@ class InvoiceHelper
 
             $itemsData = [
                 [
-                    'description' => "Plan: $planName — Initial Purchase ($periodLabel)",
+                    'description' => "Plan: $planName - Initial Purchase ($periodLabel)",
                     'quantity' => 1.00,
                     'unit_price' => (float) $baseCredits,
                     'total' => (float) $baseCredits,
@@ -151,7 +151,7 @@ class InvoiceHelper
 
             $itemsData = [
                 [
-                    'description' => "Plan: $planName — Renewal ($periodLabel)",
+                    'description' => "Plan: $planName - Renewal ($periodLabel)",
                     'quantity' => 1.00,
                     'unit_price' => (float) $baseCredits,
                     'total' => (float) $baseCredits,

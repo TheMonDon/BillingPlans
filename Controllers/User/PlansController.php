@@ -29,6 +29,7 @@ use App\Chat\Allocation;
 use App\Chat\SpellVariable;
 use App\Chat\ServerVariable;
 use App\Helpers\ApiResponse;
+use App\Helpers\WingsUrlHelper;
 use App\Services\Wings\Wings;
 use App\CloudFlare\CloudFlareRealIP;
 use App\Addons\billingplans\Chat\Plan;
@@ -1037,6 +1038,7 @@ class PlansController
                 $node['scheme'],
                 $node['daemon_token'],
                 30,
+                WingsUrlHelper::isBehindProxy($node),
             );
             $response = $wings
                 ->getServer()

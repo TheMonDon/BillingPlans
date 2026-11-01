@@ -68,7 +68,7 @@ function getPeriodLabel(days: number) {
   return PERIOD_MAP[days] ?? `Every ${days}d`;
 }
 function formatDate(dt: string | null) {
-  if (!dt) return "—";
+  if (!dt) return "-";
   return new Date(dt).toLocaleDateString(undefined, {
     year: "numeric", month: "short", day: "numeric",
     hour: "2-digit", minute: "2-digit",
@@ -740,7 +740,7 @@ watch(
           <select v-model="targetPlanId" class="billing-select" :disabled="candidatePlansForSub.length === 0">
             <option :value="null" disabled>Select new plan...</option>
             <option v-for="plan in candidatePlansForSub" :key="plan.id" :value="plan.id">
-              {{ plan.name }} — {{ (plan.total_credits ?? plan.price_credits).toLocaleString() }} credits / {{ getPeriodLabel(plan.billing_period_days) }}
+              {{ plan.name }} - {{ (plan.total_credits ?? plan.price_credits).toLocaleString() }} credits / {{ getPeriodLabel(plan.billing_period_days) }}
             </option>
           </select>
           <ChevronDown class="billing-select-icon" />
@@ -782,7 +782,7 @@ watch(
 
       <div class="mb-6">
         <h2 class="text-2xl font-bold tracking-tight text-foreground">{{ planToSubscribe.name }}</h2>
-        <p class="text-sm text-muted-foreground mt-0.5">Confirm nest, server type, and name — same layout as the panel admin billing area.</p>
+        <p class="text-sm text-muted-foreground mt-0.5">Confirm nest, server type, and name - same layout as the panel admin billing area.</p>
       </div>
 
       <div class="space-y-5">
@@ -904,7 +904,7 @@ watch(
             <label class="block text-xs font-medium text-muted-foreground mb-1.5">Egg (server type) <span class="text-red-400">*</span></label>
             <p class="text-xs text-muted-foreground mb-2">
               <template v-if="planToSubscribe.user_can_choose_realm && chosenRealmId == null">Select a nest first.</template>
-              <template v-else-if="subscribeFilteredSpells.length === 0">No eggs for this nest — ask an admin to allow eggs for this nest.</template>
+              <template v-else-if="subscribeFilteredSpells.length === 0">No eggs for this nest - ask an admin to allow eggs for this nest.</template>
               <template v-else>Only eggs for your selected nest are listed.</template>
             </p>
             <div class="billing-select-wrap">
@@ -1040,7 +1040,7 @@ watch(
           <h1 class="text-2xl font-bold tracking-tight flex items-center gap-2 text-foreground">
             <CreditCard class="h-6 w-6 text-primary" />Billing Plans
           </h1>
-          <p class="text-sm text-muted-foreground mt-0.5">{{ isPublicMode ? "Browse available server plans. Log in to subscribe." : "Subscribe to server plans billed in credits — same look as the admin billing tools." }}</p>
+          <p class="text-sm text-muted-foreground mt-0.5">{{ isPublicMode ? "Browse available server plans. Log in to subscribe." : "Subscribe to server plans billed in credits - same look as the admin billing tools." }}</p>
         </div>
         <button
           type="button"
@@ -1272,14 +1272,14 @@ watch(
 
               <div v-else class="flex items-center gap-2 bg-muted/20 rounded-lg px-3 py-2 mb-3">
                 <Server class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <p class="text-xs text-muted-foreground">Subscription only — no server auto-provisioned</p>
+                <p class="text-xs text-muted-foreground">Subscription only - no server auto-provisioned</p>
               </div>
 
 
               <div v-if="!isPublicMode && !plan.can_afford && !plan.is_sold_out && canSubscribeMore"
                 class="flex items-center gap-2 text-xs text-amber-500 bg-amber-500/10 rounded-lg px-3 py-2 mb-3">
                 <AlertTriangle class="h-3.5 w-3.5 shrink-0" />
-                <span>Need {{ ((plan.total_credits ?? plan.price_credits) - userCredits).toLocaleString() }} more credits — or enter a coupon at checkout</span>
+                <span>Need {{ ((plan.total_credits ?? plan.price_credits) - userCredits).toLocaleString() }} more credits - or enter a coupon at checkout</span>
               </div>
               <div v-else-if="!isPublicMode && !canSubscribeMore && !plan.is_sold_out"
                 class="flex items-center gap-2 text-xs text-amber-500 bg-amber-500/10 rounded-lg px-3 py-2 mb-3">
@@ -1408,7 +1408,7 @@ watch(
                   <div v-if="sub.status === 'suspended' && !isPendingCancellation(sub)"
                     class="flex items-start gap-2 text-xs text-amber-500 bg-amber-500/10 rounded-lg px-3 py-2 mb-3">
                     <PauseCircle class="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                    <span>Suspended — insufficient credits at renewal. Top up your balance and your server will be restored at the next billing cycle.</span>
+                    <span>Suspended - insufficient credits at renewal. Top up your balance and your server will be restored at the next billing cycle.</span>
                   </div>
 
                   <button

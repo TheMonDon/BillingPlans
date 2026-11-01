@@ -1,10 +1,10 @@
 plugin:
   name: BillingPlans
   identifier: billingplans
-  description: 'Sell servers as renewable billing plans with credit-based billing — a full WHMCS-style subscription engine for FeatherPanel!'
+  description: 'Sell servers as renewable billing plans with credit-based billing - a full WHMCS-style subscription engine for FeatherPanel!'
   flags:
     - hasEvents
-  version: 2.1.0
+  version: 2.1.1
   target: v2
   author:
     - NaysKutzu

@@ -297,8 +297,8 @@ class SubscriptionsController
             'name' => 'billingplans_cancel_subscription',
             'context' => "User cancelled subscription #$subscriptionId (plan: {$subscription['plan_name']})" .
                 ($atPeriodEnd
-                    ? " — active until {$subscription['next_renewal_at']}"
-                    : ($serverUuid ? " — server $serverUuid suspended immediately" : '')),
+                    ? " - active until {$subscription['next_renewal_at']}"
+                    : ($serverUuid ? " - server $serverUuid suspended immediately" : '')),
             'ip_address' => CloudFlareRealIP::getRealIP(),
         ]);
 
